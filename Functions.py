@@ -34,7 +34,6 @@ def encode_emotion_2(x):
         return None
     
 
-# new_df['Emotion_New'] = new_df.Emotion.map(encode_emotion)
 
 def clean_split(split_type, df): 
     new_df = pd.DataFrame() 
@@ -42,9 +41,9 @@ def clean_split(split_type, df):
     new_df['Item'] = df['emotion_in_tweet_is_directed_at']
     new_df['Emotion'] = df['is_there_an_emotion_directed_at_a_brand_or_product']
     if split_type == 2: 
-        new_df['Emotion_New'] = new_df.Emotion.map(encode_emotion_3)
-    else: 
         new_df['Emotion_New'] = new_df.Emotion.map(encode_emotion_2)
+    else: 
+        new_df['Emotion_New'] = new_df.Emotion.map(encode_emotion_3)
     
     #dropping na in columns Text and Emotion
     new_df.dropna(subset = ['Text', 'Emotion_New'], inplace = True)
@@ -89,4 +88,6 @@ def clean_split(split_type, df):
     
     print('Finished Pickling')
     
+    
+    return train_features, test_features, y_train, y_test
  
