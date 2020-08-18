@@ -4,10 +4,20 @@ from tqdm import tqdm
 from pprint import pprint
 import enchant
 import pickle
+import matplotlib.pyplot as plt
+
 
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.utils import resample
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, StackingClassifier, BaggingClassifier, AdaBoostClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.linear_model import SGDClassifier, RidgeClassifier, LogisticRegression
+from sklearn.naive_bayes import GaussianNB, MultinomialNB
+from sklearn.svm import SVC,LinearSVC
+from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score, GridSearchCV, RandomizedSearchCV
+from sklearn.metrics import classification_report, plot_confusion_matrix, confusion_matrix
 
 
 import nltk 
@@ -15,7 +25,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer, sent_tokenize, word_tokenize, TweetTokenizer
 from nltk.corpus import stopwords
 
-def plot_model_results(results, model_names, filepath):
+def plot_model_results(results, model_names, filepath, figsize = (10, 8)):
     
     """Plots and saves an image of the plot.
     Input:
@@ -31,11 +41,13 @@ def plot_model_results(results, model_names, filepath):
     plt.savefig(filepath)
     plt.show()
 
-def test_models(models, n_jobs = 2):
+def test_models(x_train, y_train, models, n_jobs = 2):
     """
     Test all models given.
     
-    Hey sam I would appriciate it if you could add to this doc string!"""
+    Hey sam I would appriciate it if you could add to this doc string!
+    
+    returns: results, model_names"""
     results = []
     model_names = []
     pbar = tqdm(models.items())
@@ -43,7 +55,7 @@ def test_models(models, n_jobs = 2):
     for model, m in pbar: 
         pbar.set_description(f'Evaluating {model.upper()}')
         cv = RepeatedStratifiedKFold(n_splits = 5, n_repeats = 5)
-        scores = cross_val_score(m, x_train_new, y_train_new, scoring = 'accuracy', cv = cv, n_jobs = n_jobs, 
+        scores = cross_val_score(m, x_train, y_train, scoring = 'accuracy', cv = cv, n_jobs = n_jobs, 
                                  error_score = 'raise')
         results.append(scores)
         model_names.append(model)
@@ -229,3 +241,4 @@ def import_tweet_data():
     Output: A Pandas DataFrame"""
     
     df = pd.read_csv('data/TweetsOriginal.csv', encoding = 'ISO-8859-1' )
+    return df
