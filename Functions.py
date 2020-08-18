@@ -68,106 +68,6 @@ def stacked_model(models):
     
     return stack_model
 
-def resample(x_train, y_train, num_targets, n_samples):
-    
-    """Allows resampling of a dataframe as long as there are 2 or 3 targets. 
-    Resamples all targets.
-    
-    Input: 
-    
-    x_train: array of features
-    y_train: 1D array of targets
-    num_targets: the number of targets, 2 or 3
-    n_samples: how many samples will be chosen
-    
-    Output: 
-    X_train: A pandas DataFrame
-    y_train: A numpy array object
-    """
-    
-    print(f"""Original Train Value Counts
-{y_train.value_counts()}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Original Test Value Counts
-{y_test.value_counts()}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~""")
-
-    train_df = pd.DataFrame(x_train)
-    train_df['target'] = y_train.values 
-    
-    neg_df = train_df[train_df.target == 0]
-    pos_df = train_df[train_df.target == 1]
-
-    resample_pos = resample(pos_df, n_samples = n_samples, random_state = 10, replace = False)
-    resample_neg = resample(neg_df, n_samples = n_samples, random_state = 10, replace = False)
-    
-    df = resample_neg.append(resample_pos, ignore_index = True)
-    
-    if num_targets == 3:
-        neut_df = train_df[train_df.target == 2]
-        resample_neut = resample(neut_df, n_samples = n_samples, random_state = 10, replace = False)
-        df = df.append(resample_neut, ignore_index = True)
-    
-    X_train = df.drop(columns = 'target')
-    y_train = df.target.values.ravel()
-    
-    print(f"""Final Resampled Value Counts
-{final_df.target.value_counts()}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~""")
-    
-    return X_train, y_train
-
-
-def resample_skip_neg(x_train, y_train, num_targets, n_samples):
-    
-        """Allows resampling of a dataframe as long as there are 2 or 3 targets. 
-    Resamples all targets except for those with a "0", the negative sentiment
-    value. 
-    
-    Input: 
-    
-    x_train: array of features
-    y_train: 1D array of targets
-    num_targets: the number of targets, 2 or 3
-    n_samples: how many samples will be chosen
-    
-    Output: 
-    X_train: A pandas DataFrame
-    y_train: A numpy array object
-    """
-    
-    print(f"""Original Train Value Counts
-{y_train.value_counts()}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Original Test Value Counts
-{y_test.value_counts()}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~""")
-
-    train_df = pd.DataFrame(x_train)
-    train_df['target'] = y_train.values 
-    
-    neg_df = train_df[train_df.target == 0]
-    pos_df = train_df[train_df.target == 1]
-
-    resample_pos = resample(pos_df, n_samples = n_samples, random_state = 10, replace = False)
-    
-    df = neg_df.append(resample_neg, ignore_index = True)
-    
-    if num_targets == 3:
-        neut_df = train_df[train_df.target == 2]
-        resample_neut = resample(neut_df, n_samples = n_samples, random_state = 10, replace = False)
-        df = df.append(resample_neut, ignore_index = True)
-    
-    X_train = df.drop(columns = 'target')
-    y_train = df.target.values.ravel()
-    
-    print(f"""Final Resampled Value Counts
-{final_df.target.value_counts()}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~""")
-    
-    return X_train, y_train
-
-    
 def get_pickles(split_type = 0): 
     
     """
@@ -181,11 +81,13 @@ def get_pickles(split_type = 0):
     
     if split_type > 0:
         split_type = str(split_type) + '_'
+    else:
+        split_type = ''
         
-    x_train = pickle.load(open(f'Pickles/{split_type}x_train.p', 'rb'))
-    x_test = pickle.load(open(f'Pickles/{split_type}x_test.p', 'rb'))
-    y_train = pickle.load(open(f'Pickles/{split_type}y_train.p', 'rb'))
-    y_test = pickle.load(open(f'Pickles/{split_type}y_test.p', 'rb'))
+    x_train = pickle.load(open(f'../Pickles/{split_type}x_train.p', 'rb'))
+    x_test = pickle.load(open(f'../Pickles/{split_type}x_test.p', 'rb'))
+    y_train = pickle.load(open(f'../Pickles/{split_type}y_train.p', 'rb'))
+    y_test = pickle.load(open(f'../Pickles/{split_type}y_test.p', 'rb'))
     return x_train, x_test, y_train, y_test
 
 def save_cv_results(model_names, results, filename):
@@ -259,9 +161,42 @@ def clean_split(split_type, df):
     new_df.Text= new_df.Text.map(lambda x: word_tokenizer.tokenize(x.lower()))
     new_df.Text = new_df.Text.map(lambda x: ' '.join(x))
     
+    if split_type == 2:
+        print('Original Value Counts')
+        print(new_df.Emotion_New.value_counts())
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        pos_df = new_df[new_df.Emotion_New == 1]
+        neg_df = new_df[new_df.Emotion_New == 0]
+        
+        resample_pos = resample(pos_df, n_samples = 600, random_state = 10, replace = False)
+        new_df = resample_pos.append(neg_df, ignore_index = True)
+        print('Final Resampled Value Counts')
+        print(new_df.Emotion_New.value_counts())
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    
+    else: 
+        print('Original Value Counts')
+        print(new_df.Emotion_New.value_counts())
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+           
+
+        pos_df = new_df[new_df.Emotion_New == 1]
+        neg_df = new_df[new_df.Emotion_New == 0]
+        neut_df = new_df[new_df.Emotion_New == 2]
+
+        resample_pos = resample(pos_df, n_samples = 600, random_state = 10, replace = False)
+        resample_neut = resample(neut_df, n_samples = 600, random_state = 10, replace = False)
+        
+        new_df = neg_df.append(resample_pos, ignore_index = True)
+        new_df = new_df.append(resample_neut, ignore_index = True)
+        print('Final Resampled Value Counts')
+        print(new_df.Emotion_New.value_counts())
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
     
     #split into test and trains
-    x_train, x_test, y_train, y_test = train_test_split(new_df.Text, new_df.Emotion_New, stratify = new_df.Emotion_New,                                        train_size = .75, random_state = 10)
+    x_train, x_test, y_train, y_test = train_test_split(new_df.Text, new_df.Emotion_New, stratify = new_df.Emotion_New,                                        
+                                                        train_size = .85, random_state = 10)
     
     #removing stop words
     stop = stopwords.words('english')
@@ -284,4 +219,13 @@ def clean_split(split_type, df):
     
     
     return train_features, test_features, y_train, y_test
+
  
+    
+def import_tweet_data():
+    """Imports the tweet data from the 'data' folder, 
+    with ISO-8859-1 encoding.
+    
+    Output: A Pandas DataFrame"""
+    
+    df = pd.read_csv('data/TweetsOriginal.csv', encoding = 'ISO-8859-1' )
