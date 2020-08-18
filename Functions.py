@@ -143,93 +143,91 @@ def encode_emotion_2(x):
         return None
     
 
-def clean_split(split_type, df): 
-    new_df = pd.DataFrame() 
+def clean_split(split_type, df):
+    new_df = pd.DataFrame()
     new_df['Text'] = df['tweet_text']
     new_df['Item'] = df['emotion_in_tweet_is_directed_at']
     new_df['Emotion'] = df['is_there_an_emotion_directed_at_a_brand_or_product']
-    if split_type == 2: 
+    if split_type == 2:
         new_df['Emotion_New'] = new_df.Emotion.map(encode_emotion_2)
-    else: 
+    else:
         new_df['Emotion_New'] = new_df.Emotion.map(encode_emotion_3)
-    
     #dropping na in columns Text and Emotion
     new_df.dropna(subset = ['Text', 'Emotion_New'], inplace = True)
-    
     #getting rid of @ symbols
-    en_us = enchant.Dict("en_US")
-
-    phrases = new_df.Text.values
-
-    for i, phrase in enumerate(new_df.Text):
-        phrases[i] = ' '.join(w for w in phrase.split() if en_us.check(w))
-
-    new_df.Text = phrases
-    
-    word_tokenizer = RegexpTokenizer(r'\w+')
+#     en_us = enchant.Dict("en_US")
+#     phrases = []
+#     for i, phrase in enumerate(new_df.Text):
+#         phrases.append(' '.join(w for w in phrase.split() if en_us.check(w) and not w.isalpha()))
+#     new_df.Text = phrases
+    eng_words = set(nltk.corpus.words.words())
+    tweets = new_df.Text.values
+    new_tweets = []
+    for sent in tweets:
+        new_tweets.append(" ".join(w for w in nltk.wordpunct_tokenize(sent) \
+                 if w.lower() in eng_words or not w.isalpha()))
+    new_df.Text = new_tweets
+    word_tokenizer = RegexpTokenizer("([a-zA-Z&]+(?:'[a-z]+)?)")
+    word_lemmet = WordNetLemmatizer()
+    word_stemm = PorterStemmer()
+#     word_tokenizer = RegexpTokenizer(r'\w+')
     tweet_token = TweetTokenizer()
     new_df.Text = new_df.Text.map(lambda x: tweet_token.tokenize(x.lower()))
     new_df.Text = new_df.Text.map(lambda x: ' '.join(x))
     new_df.Text= new_df.Text.map(lambda x: word_tokenizer.tokenize(x.lower()))
-    new_df.Text = new_df.Text.map(lambda x: ' '.join(x))
-    
+    new_df.Text = new_df.Text.map(lambda x: ' '.join([word_lemmet.lemmatize(i) for i in x]))
     if split_type == 2:
         print('Original Value Counts')
         print(new_df.Emotion_New.value_counts())
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         pos_df = new_df[new_df.Emotion_New == 1]
         neg_df = new_df[new_df.Emotion_New == 0]
-        
         resample_pos = resample(pos_df, n_samples = 600, random_state = 10, replace = False)
         new_df = resample_pos.append(neg_df, ignore_index = True)
         print('Final Resampled Value Counts')
         print(new_df.Emotion_New.value_counts())
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    
-    else: 
+    else:
         print('Original Value Counts')
         print(new_df.Emotion_New.value_counts())
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-           
-
         pos_df = new_df[new_df.Emotion_New == 1]
         neg_df = new_df[new_df.Emotion_New == 0]
         neut_df = new_df[new_df.Emotion_New == 2]
-
         resample_pos = resample(pos_df, n_samples = 600, random_state = 10, replace = False)
         resample_neut = resample(neut_df, n_samples = 600, random_state = 10, replace = False)
-        
         new_df = neg_df.append(resample_pos, ignore_index = True)
         new_df = new_df.append(resample_neut, ignore_index = True)
         print('Final Resampled Value Counts')
         print(new_df.Emotion_New.value_counts())
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-
-    
+#     stop = stopwords.words('english')
+#     vectorizer= TfidfVectorizer(stop_words = stop, max_features = 5000, ngram_range=(1,2))
+#     vectorizer.fit(new_df.Text.values)
     #split into test and trains
-    x_train, x_test, y_train, y_test = train_test_split(new_df.Text, new_df.Emotion_New, stratify = new_df.Emotion_New,                                        
+    x_train, x_test, y_train, y_test = train_test_split(new_df.Text, new_df.Emotion_New, stratify = new_df.Emotion_New,
                                                         train_size = .85, random_state = 10)
-    
     #removing stop words
     stop = stopwords.words('english')
-    vectorizer = CountVectorizer(stop_words = stop, max_features = 5000, ngram_range=(1,3))
+    vectorizer= CountVectorizer(stop_words = stop, max_features = 3000, ngram_range=(1,1))
+#     vectorizer= TfidfVectorizer(stop_words = stop, max_features = 5000, ngram_range=(1,2), smooth_idf = False)
     clean_train = x_train.values
     clean_test = x_test.values
-
-    train_features =vectorizer.fit_transform(clean_train).toarray()
-    test_features = vectorizer.fit_transform(clean_test).toarray()
-    
-    
-    
+    vectorizer.fit(clean_train)
+    train_features =vectorizer.transform(clean_train).toarray()
+    test_features = vectorizer.transform(clean_test).toarray()
+    train_df = pd.DataFrame(train_features, columns = vectorizer.get_feature_names())
+    train_df['target'] = y_train.values
+    train_df.to_csv('data/TrainDF.csv', index = False)
+    test_df = pd.DataFrame(test_features, columns = vectorizer.get_feature_names())
+    test_df['target'] = y_test.values
+    test_df.to_csv('data/TestDF.csv', index = False)
     #pickling
     pickle.dump(train_features, open(f'../Pickles/{split_type}_x_train.p', 'wb'))
     pickle.dump(test_features, open(f'../Pickles/{split_type}_x_test.p', 'wb'))
     pickle.dump(y_train, open(f'../Pickles/{split_type}_y_train.p', 'wb'))
     pickle.dump(y_test, open(f'../Pickles/{split_type}_y_test.p', 'wb'))
-    
     print('Finished Pickling')
-    
-    
     return train_features, test_features, y_train, y_test
 
  
