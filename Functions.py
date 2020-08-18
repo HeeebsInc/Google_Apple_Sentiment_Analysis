@@ -15,6 +15,22 @@ from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer, sent_tokenize, word_tokenize, TweetTokenizer
 from nltk.corpus import stopwords
 
+def plot_model_results(results, model_names, filepath):
+    
+    """Plots and saves an image of the plot.
+    Input:
+    results: the results of the models, gained from test_models()
+    model_names: the names of models used, gained from test_models()
+    filepath: the filepath for the graph image to be saved to
+    """
+    
+    plt.figure(figsize = figsize)
+    plt.boxplot(results, labels = model_names, showmeans = True)
+    plt.title('Accuracy for Each Vanilla Model')
+    plt.ylabel('Accuracy'); plt.xlabel('Model')
+    plt.savefig(filepath)
+    plt.show()
+
 def test_models(models, n_jobs = 2):
     """
     Test all models given.
