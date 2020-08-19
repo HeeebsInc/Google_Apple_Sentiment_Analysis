@@ -12,7 +12,7 @@ from nltk.stem.porter import PorterStemmer
 import matplotlib.pyplot as plt
 from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score, GridSearchCV, RandomizedSearchCV
 from sklearn.metrics import classification_report, plot_confusion_matrix, confusion_matrix
-from sklearn.enseble import StackingClassifier
+from sklearn.ensemble import StackingClassifier
 import re
 
 
