@@ -172,7 +172,7 @@ def clean_split(df):
                 'bankinnov',
                 'barton', 'boooo', 'bookbook']
     stop = stopwords.words('english') + new_stop
-    vectorizer = CountVectorizer(stop_words=stop, max_features=6000, ngram_range=(1, 2))
+    vectorizer = CountVectorizer(stop_words=stop, max_features=6000, ngram_range=(1, 1))
 
     # creates a test and train df for visualization
     clean_train = x_train.values
