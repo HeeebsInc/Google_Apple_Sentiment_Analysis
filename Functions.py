@@ -147,7 +147,6 @@ def clean_split(df):
     # removes unwanted characters
     word_tokenizer = RegexpTokenizer("([a-zA-Z&]+(?:'[a-z]+)?)")
     word_stem = PorterStemmer()
-    tweet_token = TweetTokenizer()
     new_df.Text = new_df.Text.map(lambda x: word_tokenizer.tokenize(x.lower()))
     # includes only stemmed words
     new_df.Text = new_df.Text.map(lambda x: ' '.join([word_stem.stem(i) for i in x if len(i) > 2]))
