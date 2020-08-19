@@ -52,7 +52,9 @@ def test_models(x_train, y_train, models, n_jobs = 2):
         results.append(scores)
         model_names.append(model)
         
-    return results, model_names
+    vanilla_dict = {i:y for i,y in zip(model_names, results)}
+   
+    return vanilla_dict
 
 
 def stacked_model(models):
@@ -74,7 +76,7 @@ def stacked_model(models):
     return models
 
 
-def save_cv_results(model_names, results, filename):
+def save_cv_results(model_dict, filename):
     """
     Pickles the model's results
     
@@ -88,8 +90,8 @@ def save_cv_results(model_names, results, filename):
     
     Pickle file, saved in the location specified in filename
     """
-    vanilla_dict = {i:y for i,y in zip(model_names, results)}
-    return pickle.dump(vanilla_dict, open(filename, 'wb'))
+    pickle.dump(model_dict, open(filename, 'wb'))
+    return 'Done'
 
 
 def import_tweet_data():
