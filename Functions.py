@@ -46,7 +46,7 @@ def test_models(x_train, y_train, models, n_jobs = 2):
     
     for model, m in pbar: 
         pbar.set_description(f'Evaluating {model.upper()}')
-        cv = RepeatedStratifiedKFold(n_splits = 5, n_repeats = 5)
+        cv = RepeatedStratifiedKFold(n_splits = 7, n_repeats = 7)
         scores = cross_val_score(m, x_train, y_train, scoring = 'accuracy', cv = cv, n_jobs = n_jobs, 
                                  error_score = 'raise')
         results.append(scores)
@@ -68,7 +68,7 @@ def stacked_model(models):
     stack_m = [] 
     for model, m in models.items(): 
         stack_m.append((model, m))
-    stack_model = StackingClassifier(estimators = stack_m, final_estimator = LogisticRegression(), cv = 5)
+    stack_model = StackingClassifier(estimators = stack_m, final_estimator = LogisticRegression(), cv = 3)
     models['stacked'] = stack_model
     
     return models
