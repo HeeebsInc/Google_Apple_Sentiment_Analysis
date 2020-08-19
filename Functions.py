@@ -133,8 +133,6 @@ def clean_split(df):
     # dropping na in columns Text and Emotion
     new_df.dropna(subset=['Text', 'Emotion_New'], inplace=True)
 
-    tweet_token = TweetTokenizer()
-
     eng_words = set(words.words())
 
     tweets = new_df.Text.values
