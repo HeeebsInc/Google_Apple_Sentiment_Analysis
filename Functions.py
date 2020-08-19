@@ -122,18 +122,19 @@ def save_cv_results(model_names, results, filename):
     
 
 def clean_split(split_type, df):
-    new_df = pd.DataFrame()
+    new_df = df
     
     new_df.rename(columns = {
-        'Text' : 'tweet_text';
-        'Item' : 'emotion_in_tweet_is_directed_at';
-        'Emotion' : 'is_there_an_emotion_directed_at_a_brand_or_product'
-    })
+        'tweet_text': 'Text', 
+         'emotion_in_tweet_is_directed_at' : 'Item', 
+        'is_there_an_emotion_directed_at_a_brand_or_product' : 'Emotion'
+    }, inplace = True)
     
     new_df['Emotion_New'] = new_df.Emotion.replace(to_replace = {
-        'negative emotion' : 0;
-        'positive emotion' : 1;
-        'No emotion toward brand or product': None
+        'Negative emotion' : 0,
+        'Positive emotion' : 1,
+        'No emotion toward brand or product': None,
+        "I can't tell" : None
     }
     )
     
@@ -159,18 +160,19 @@ def clean_split(split_type, df):
     new_df.Text = new_df.Text.map(lambda x: ' '.join([word_lemmet.lemmatize(i) for i in x]))
     
     print(f'''Original Value Counts
-    {new_df.Emotion_New.value_counts()}
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+{new_df.Emotion_New.value_counts()}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ''')
 
     pos_df = new_df[new_df.Emotion_New == 1]
     neg_df = new_df[new_df.Emotion_New == 0]
+    
     resample_pos = resample(pos_df, n_samples = 600, random_state = 10, replace = False)
     new_df = resample_pos.append(neg_df, ignore_index = True)
     
     print(f'''Final Resampled Value Counts
-    {new_df.Emotion_New.value_counts()}
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+{new_df.Emotion_New.value_counts()}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ''')
 
     #split into test and trains
