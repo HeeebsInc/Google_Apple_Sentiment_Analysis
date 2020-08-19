@@ -203,3 +203,47 @@ def clean_split(df):
    
     #return x_train, x_test, y_train, y_test
     return train_features, test_features, y_train, y_test
+
+def run_gridsearch(classifier, X_train, y_train, X_test, y_test, params, n_jobs = 2, verbose = 0):
+    
+    """A function for performing a grid search using a random forest model.
+    Uses the training data and outputs the scores for the train and test data.
+    
+    Input: 
+    
+    classifier: classifier object
+    X_train: The training features of the dataset
+    y_train: The training class for the dataset
+    X_test: The test features of the dataset
+    y_test: The test classes of the dataset
+   
+    params: The parameters for classifier grid search
+    n_jobs: n_jobs
+    verbose: verbose
+    
+    Output:
+    
+    forest_clf: The Grid Search object
+    """
+    
+    clf = GridSearchCV(
+        estimator = RandomForestClassifier(),
+        param_grid = params,
+        n_jobs = n_jobs,
+        verbose = verbose
+    )
+    
+    clf.fit(X_train, y_train)
+    
+    print(f"""       Results
+~~~~~~~~~~~~~~~~~~~~~
+Train Score: {clf.score(X_train, y_train):.2f}
+---
+Test Score: {clf.score(X_test, y_test):.2f}
+
+Best Parameters:
+{forest_clf.best_params_}
+
+""")
+    
+    return forest_clf
