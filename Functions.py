@@ -227,7 +227,7 @@ def run_gridsearch(classifier, X_train, y_train, X_test, y_test, params, n_jobs 
     """
     
     clf = GridSearchCV(
-        estimator = RandomForestClassifier(),
+        estimator = classifier,
         param_grid = params,
         n_jobs = n_jobs,
         verbose = verbose
