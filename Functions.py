@@ -69,7 +69,7 @@ def stacked_model(models):
     stack_model = StackingClassifier(estimators = stack_m, final_estimator = LogisticRegression(), cv = 5)
     models['stacked'] = stack_model
     
-    return stack_model
+    return models
 
 
 def save_cv_results(model_names, results, filename):
