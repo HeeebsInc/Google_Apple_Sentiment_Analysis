@@ -37,21 +37,20 @@ def test_models(x_train, y_train, models, n_jobs = 2):
     """
     Test all models given.
     
-    Hey sam I would appriciate it if you could add to this doc string!
+    This will test each model on its own using RepeatedStratifiedKFold then it will test a stacking classifier with every single model in the dictionary.  
     
-    returns: results, model_names"""
+    returns: vanilla_dict (contains results and model names)"""
     results = []
     model_names = []
     pbar = tqdm(models.items())
     
     for model, m in pbar: 
         pbar.set_description(f'Evaluating {model.upper()}')
-        cv = RepeatedStratifiedKFold(n_splits = 7, n_repeats = 7)
+        cv = RepeatedStratifiedKFold(n_splits = 10, n_repeats = 10)
         scores = cross_val_score(m, x_train, y_train, scoring = 'accuracy', cv = cv, n_jobs = n_jobs, 
                                  error_score = 'raise')
         results.append(scores)
         model_names.append(model)
-        
     vanilla_dict = {i:y for i,y in zip(model_names, results)}
    
     return vanilla_dict
@@ -64,7 +63,7 @@ def stacked_model(models):
         models: Dictionary containing the model name and function.
     
     Output: 
-        stack_model: A SciKitLearn StackingClassifier object
+        stack_model: A new dictionary containing a SciKitLearn StackingClassifier object
     -----------------------------------------"""
 
     stack_m = [] 
@@ -86,9 +85,6 @@ def save_cv_results(model_dict, filename):
     results: list of results 
     filename: str, path for the file to be saved
     
-    Output: 
-    
-    Pickle file, saved in the location specified in filename
     """
     pickle.dump(model_dict, open(filename, 'wb'))
     return 'Done'
