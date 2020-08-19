@@ -122,6 +122,7 @@ def save_cv_results(model_names, results, filename):
     
 
 def clean_split(split_type, df):
+
     new_df = df
     
     new_df.rename(columns = {
@@ -152,6 +153,7 @@ def clean_split(split_type, df):
     
     word_tokenizer = RegexpTokenizer("([a-zA-Z&]+(?:'[a-z]+)?)")
     word_lemmet = WordNetLemmatizer()
+
     tweet_token = TweetTokenizer()
     
     new_df.Text = new_df.Text.map(lambda x: tweet_token.tokenize(x.lower()))
@@ -175,17 +177,19 @@ def clean_split(split_type, df):
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ''')
 
+
     #split into test and trains
     x_train, x_test, y_train, y_test = train_test_split(new_df.Text, new_df.Emotion_New, stratify = new_df.Emotion_New,
                                                         train_size = .85, random_state = 10)
     #removing stop words
     stop = stopwords.words('english')
+
     vectorizer= CountVectorizer(stop_words = stop, max_features = 5000, ngram_range=(1,2))
-    
     clean_train = x_train.values
     clean_test = x_test.values
     vectorizer.fit(clean_train)
     pickle.dump(vectorizer, open('../Pickles/vectorizer.p', 'wb'))
+
     train_features =vectorizer.transform(clean_train).toarray()
     test_features = vectorizer.transform(clean_test).toarray()
     train_df = pd.DataFrame(train_features, columns = vectorizer.get_feature_names())
@@ -194,7 +198,7 @@ def clean_split(split_type, df):
     test_df = pd.DataFrame(test_features, columns = vectorizer.get_feature_names())
     test_df['target'] = y_test.values
     test_df.to_csv('data/TestDF.csv', index = False)
-    
+
     return train_features, test_features, y_train, y_test
 
  
