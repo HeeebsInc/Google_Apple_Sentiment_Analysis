@@ -240,10 +240,8 @@ def run_gridsearch(classifier, X_train, y_train, X_test, y_test, params, n_jobs 
 Train Score: {clf.score(X_train, y_train):.2f}
 ---
 Test Score: {clf.score(X_test, y_test):.2f}
-
 Best Parameters:
-{forest_clf.best_params_}
-
+{clf.best_params_}
 """)
     
-    return forest_clf
+    return clf
