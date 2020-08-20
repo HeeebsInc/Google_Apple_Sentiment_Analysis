@@ -17,7 +17,7 @@ from sklearn.linear_model import LogisticRegression
 import re
 
 
-def plot_model_results(results, model_names, filepath, figsize = (10, 8)):
+def plot_model_results(results, model_names, filepath, figure_title, figsize = (10, 8)):
     
     """Plots and saves an image of the plot.
     Input:
@@ -28,7 +28,7 @@ def plot_model_results(results, model_names, filepath, figsize = (10, 8)):
     
     plt.figure(figsize = figsize)
     plt.boxplot(results, labels = model_names, showmeans = True)
-    plt.title('Accuracy for Each Vanilla Model')
+    plt.title(f'{figure_title}')
     plt.ylabel('Accuracy'); plt.xlabel('Model')
     plt.savefig(filepath)
     plt.show()
@@ -230,7 +230,7 @@ def run_gridsearch(classifier, X_train, y_train, X_test, y_test, params, n_jobs 
         estimator = classifier,
         param_grid = params,
         n_jobs = n_jobs,
-        verbose = verbose
+        verbose = verbose, error_score = 0.0
     )
     
     clf.fit(X_train, y_train)
