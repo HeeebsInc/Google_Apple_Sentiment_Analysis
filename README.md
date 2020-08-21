@@ -105,11 +105,13 @@
 ### 1. SKlearn.feature_selection.SelectFromModel
 - Because there are various models used within our stacked classifier.  We found the top 50 most important features (words) for each model using SKlearn's Feature_Selection module and counted the frequency of each word.   
 
+![FrequencyWord](figures/FeatureImportanceFreq.png) 
+
 
 ### 2. Local Interpretable Model-Agnostic Explanations (LIME)
 
 
-
+![lime](figures/Lime.png)
 
 
 
