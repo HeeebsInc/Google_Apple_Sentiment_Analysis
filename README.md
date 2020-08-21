@@ -50,6 +50,8 @@
 
 ![KMeans](figures/KMeans.png)
 
+![PCA_Cluster-Gif](figures/MyVideo_122.gif)
+
 
 
 
