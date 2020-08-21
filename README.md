@@ -8,7 +8,7 @@
   - [LinkedIn](https://www.linkedin.com/in/samuel-mohebban-b50732139/) 
   - [Medium](https://medium.com/@HeeebsInc)
 - Raven Welch
-  - RavenNHWelch@gmail.com 
+  - email 
   - [LinkedIn](https://www.linkedin.com/in/raven-welch/)
   - [Medium]()
 
@@ -99,23 +99,37 @@
     
 ![CM](figures/StackedTunedCM.png)
 
+
+
+
 ## Understanding Feature Importances 
 - [code](TechnicalNotebook.ipynb)
 
 ### 1. SKlearn.feature_selection.SelectFromModel
 - Because there are various models used within our stacked classifier.  We found the top 50 most important features (words) for each model using SKlearn's Feature_Selection module and counted the frequency of each word.   
+- As seen below, the words "headache", "hate", and "battery" all showed up 6 times.  This means that across all of our models within the stacked classifier, these words were among the top 50 most important features 6 times.  
 
 ![FrequencyWord](figures/FeatureImportanceFreq.png) 
 
 
 ### 2. Local Interpretable Model-Agnostic Explanations (LIME)
-
+- For more information regarding how to use LIME please visit their [GitHub Repo](https://github.com/marcotcr/lime)
+- Below, you see the feature weights and their corresponding importance for making a prediction.  The words seen below make sense considering their connotations within the english language
 
 ![lime](figures/Lime.png)
 
 
+## Limitations & Future Directions 
 
+#### Limitations
+- Data was collection ~7 years ago.  This can be problematic because words and phrases change year to year.  So an algorithm such as this one can only be applied to understanding sentiment of Tweets that were made in 2013.  
+- Huge data imbalance.  Our strategy to fix this imbalance was to undersample the class with the higher frequency - Positive class.  However, in doing this, we limited our data to only 1000 points which could have been a bottleneck within our training 
 
+#### Future Directions 
+- MORE DATA! 
+- Refine the model to include specific slang that is relevant to the current era 
+- analyze specifically what the users are frustrated or happy with (Iphone, Android, etc.) 
+- Create a ternary classification problem that can not only detect positive and negative sentiment, but also neutral sentiment as well
 
 
 
