@@ -49,7 +49,7 @@
 
 - Using Sum of Square differences, we found the optimal cluster size to be equal to 6 
 - We then used PCA dimension reduction to reduce our values onto a 3-demensional plane in order to create the visualization below 
--  [code](ClusterViz.ipynb) for 3D plot
+-  [code](TechnicalNotebook.ipynb) for 3D plot
 
 ![KMeans](figures/KMeans.png)
 
