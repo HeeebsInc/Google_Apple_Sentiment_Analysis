@@ -15,6 +15,7 @@ from sklearn.metrics import classification_report, plot_confusion_matrix, confus
 from sklearn.ensemble import StackingClassifier
 from sklearn.linear_model import LogisticRegression
 import re
+from sklearn.cluster import KMeans
 
 
 def plot_model_results(results, model_names, filepath, figure_title, figsize = (10, 8)):
@@ -100,6 +101,49 @@ def import_tweet_data():
     return df
     
 
+def run_gridsearch(classifier, X_train, y_train, X_test, y_test, params, n_jobs = 2, verbose = 0):
+    
+    """A function for performing a grid search using a random forest model.
+    Uses the training data and outputs the scores for the train and test data.
+    
+    Input: 
+    
+    classifier: classifier object
+    X_train: The training features of the dataset
+    y_train: The training class for the dataset
+    X_test: The test features of the dataset
+    y_test: The test classes of the dataset
+   
+    params: The parameters for classifier grid search
+    n_jobs: n_jobs
+    verbose: verbose
+    
+    Output:
+    
+    forest_clf: The Grid Search object
+    """
+    
+    clf = GridSearchCV(
+        estimator = classifier,
+        param_grid = params,
+        n_jobs = n_jobs,
+        verbose = verbose, error_score = 0.0
+    )
+    
+    clf.fit(X_train, y_train)
+    
+    print(f"""       Results
+~~~~~~~~~~~~~~~~~~~~~
+Train Score: {clf.score(X_train, y_train):.2f}
+---
+Test Score: {clf.score(X_test, y_test):.2f}
+Best Parameters:
+{clf.best_params_}
+""")
+    
+    return clf
+
+
 
 def clean_split(df): 
     '''This function takes in the original tweet dataframe and does the following
@@ -182,66 +226,37 @@ def clean_split(df):
     clean_test = x_test.Text.values
     test_items = x_test.Item.values
     vectorizer.fit(clean_train)
-    
+ 
     #saves vectorizer as a pickle for future use
     pickle.dump(vectorizer, open('../Pickles/vectorizer.p', 'wb'))
 
     train_features =vectorizer.transform(clean_train).toarray()
     test_features = vectorizer.transform(clean_test).toarray()
     
+       
+    kmeans = KMeans(n_clusters = 6)
+    kmeans.fit(train_features)
+    train_clusters = kmeans.predict(train_features)
+    test_clusters = kmeans.predict(test_features)
+    
     train_df = pd.DataFrame(train_features, columns = vectorizer.get_feature_names())
     train_df['target'] = y_train.values
     train_df['Item'] = train_items
+    train_df['Cluster'] = train_clusters
     
     test_df = pd.DataFrame(test_features, columns = vectorizer.get_feature_names())
     test_df['target'] = y_test.values
     test_df['Item'] = test_items
+    test_df['Cluster'] = test_clusters
     
     #saves test and train df for visualizations
     train_df.to_csv('data/TrainDF.csv', index = False)
     test_df.to_csv('data/TestDF.csv', index = False)
-   
-    #return x_train, x_test, y_train, y_test
-    return train_features, test_features, y_train, y_test
-
-def run_gridsearch(classifier, X_train, y_train, X_test, y_test, params, n_jobs = 2, verbose = 0):
     
-    """A function for performing a grid search using a random forest model.
-    Uses the training data and outputs the scores for the train and test data.
+    x_train = train_df[[i for i in train_df.columns if i not in ['target', 'Item']]].values
+    y_train = train_df[['target']].values.ravel()
     
-    Input: 
+    x_test = test_df[[i for i in test_df.columns if i not in ['target', 'Item']]].values
+    y_test = test_df[['target']].values.ravel()
     
-    classifier: classifier object
-    X_train: The training features of the dataset
-    y_train: The training class for the dataset
-    X_test: The test features of the dataset
-    y_test: The test classes of the dataset
-   
-    params: The parameters for classifier grid search
-    n_jobs: n_jobs
-    verbose: verbose
-    
-    Output:
-    
-    forest_clf: The Grid Search object
-    """
-    
-    clf = GridSearchCV(
-        estimator = classifier,
-        param_grid = params,
-        n_jobs = n_jobs,
-        verbose = verbose, error_score = 0.0
-    )
-    
-    clf.fit(X_train, y_train)
-    
-    print(f"""       Results
-~~~~~~~~~~~~~~~~~~~~~
-Train Score: {clf.score(X_train, y_train):.2f}
----
-Test Score: {clf.score(X_test, y_test):.2f}
-Best Parameters:
-{clf.best_params_}
-""")
-    
-    return clf
+    return x_train, x_test, y_train, y_test
