@@ -191,6 +191,7 @@ def clean_split(df):
     word_tokenizer = RegexpTokenizer("([a-zA-Z&]+(?:'[a-z]+)?)")
     word_stem = PorterStemmer()
     new_df.Text= new_df.Text.map(lambda x: word_tokenizer.tokenize(x.lower()))
+    
     #includes only stemmed words
     new_df.Text = new_df.Text.map(lambda x: ' '.join([word_stem.stem(i) for i in x if len(i) > 2 and i not in eng_names]))
 
@@ -233,12 +234,14 @@ def clean_split(df):
     train_features =vectorizer.transform(clean_train).toarray()
     test_features = vectorizer.transform(clean_test).toarray()
     
+    #applies KMEans clustering as a new feature columns
        
     kmeans = KMeans(n_clusters = 6)
     kmeans.fit(train_features)
     train_clusters = kmeans.predict(train_features)
     test_clusters = kmeans.predict(test_features)
     
+    #saves features to a dataframe for later visualizations
     train_df = pd.DataFrame(train_features, columns = vectorizer.get_feature_names())
     train_df['target'] = y_train.values
     train_df['Item'] = train_items
@@ -253,6 +256,7 @@ def clean_split(df):
     train_df.to_csv('data/TrainDF.csv', index = False)
     test_df.to_csv('data/TestDF.csv', index = False)
     
+    #includes only the relevant feature columns for training 
     x_train = train_df[[i for i in train_df.columns if i not in ['target', 'Item']]].values
     y_train = train_df[['target']].values.ravel()
     
