@@ -31,6 +31,7 @@
 
 ![ClassImbalance](figures/ClassImbalance.png)
 
+
 ## Data Cleaning 
 1. Cleaned the data to remove the following: 
     - names
