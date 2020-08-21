@@ -1,5 +1,7 @@
 # Google_Apple_Sentiment_Analysis
 
+![CoverPhoto](figures/TwitterUnsplash.jpg)
+
 ## Contributers 
 - Samuel Mohebban
   - Samuel.MohebbanJob@gmail.com
@@ -44,6 +46,7 @@
 - [code](https://github.com/HeeebsInc/Google_Apple_Sentiment_Analysis/blob/master/Functions.py#L148)
 
 ### KMeans Clustering 
+
 
 ![KMeans](figures/KMeans.png)
 
