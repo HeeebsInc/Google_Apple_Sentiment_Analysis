@@ -10,7 +10,7 @@
 - Raven Welch
   - RavenNHWelch@gmail.com 
   - [LinkedIn](https://www.linkedin.com/in/raven-welch/)
-  - [Medium]()
+  - [Medium](https://medium.com/@ravenwelch)
 
 [Google Slide Presentation](https://docs.google.com/presentation/d/15voSS3ctPLzh_cXnql9N3kaXL4PJ-3-6xRGRzFsgyzc/edit?usp=sharing)
 ## Problem 
