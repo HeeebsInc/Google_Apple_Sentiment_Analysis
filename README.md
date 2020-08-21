@@ -8,7 +8,7 @@
   - [LinkedIn](https://www.linkedin.com/in/samuel-mohebban-b50732139/) 
   - [Medium](https://medium.com/@HeeebsInc)
 - Raven Welch
-  - email 
+  - RavenNHWelch@gmail.com 
   - [LinkedIn](https://www.linkedin.com/in/raven-welch/)
   - [Medium]()
 
