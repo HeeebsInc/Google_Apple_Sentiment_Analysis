@@ -1,4 +1,4 @@
-# Google_Apple_Sentiment_Analysis
+# Twitter_Sentiment_Analysis
 
 ![CoverPhoto](figures/TwitterUnsplash.jpg)
 
