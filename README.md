@@ -51,3 +51,15 @@
 ![KMeans](figures/KMeans.png)
 
 
+
+
+
+
+
+
+
+
+
+
+![TwitterBird](figures/BirdTwitter.jpg)
+
