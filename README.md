@@ -61,7 +61,7 @@
 - Initially, we tried various models and tested each alone, and together within a stacked classifier 
 - We then iterated 3 times, each time pruning the least accurate models in order to increase the accuracy of our stacked classifier 
 - For each run, we used SKlearn's RepeatedStratifiedKFold to compare each model's accuracy.  
-- [code](ModelingSKLearn.ipynb)
+- [code](TechnicalNotebook.ipynb)
 ### Test 1
 - After the first test, we pruned KNN, DecisionTree, and LDA.  These models all had a majority of scores lower than 75% and very wide ranges
 ![Vanilla1](figures/VanillaResults1.png)
@@ -86,10 +86,27 @@
 ![classification_report](figures/ClassificationReport.png) 
 
 ### Confusion Matrix 
+- **Train** 
+    - 97% True Negative Rate 
+    - 3% False Negative Rate 
+    - 98% True Positive Rate 
+    - 2% False Positive Rate
+- **Test** 
+    - 83% True Negative Rate 
+    - 17% False Negative Rate 
+    - 81% True Positive Rate 
+    - 19% False Positive Rate
+    
 ![CM](figures/StackedTunedCM.png)
 
 ## Understanding Feature Importances 
-- 
+- [code](TechnicalNotebook.ipynb)
+
+### 1. SKlearn.feature_selection.SelectFromModel
+- Because there are various models used within our stacked classifier.  We found the top 50 most important features (words) for each model using SKlearn's Feature_Selection module and counted the frequency of each word.   
+
+
+### 2. Local Interpretable Model-Agnostic Explanations (LIME)
 
 
 
