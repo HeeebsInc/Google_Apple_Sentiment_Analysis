@@ -47,10 +47,43 @@
 
 ### KMeans Clustering 
 
+- Using Sum of Square differences, we found the optimal cluster size to be equal to 6 
+- We then used PCA dimension reduction to reduce our values onto a 3-demensional plane in order to create the visualization below 
+-  [code](ClusterViz.ipynb) for 3D plot
 
 ![KMeans](figures/KMeans.png)
 
 ![PCA_Cluster-Gif](figures/MyVideo_122.gif)
+
+
+### Modeling 
+- Our base model is a stacked classifier 
+- Initially, we tried various models and tested each alone, and together within a stacked classifier 
+- We then iterated 3 times, each time pruning the least accurate models in order to increase the accuracy of our stacked classifier 
+- For each run, we used SKlearn's RepeatedStratifiedKFold to compare each model's accuracy.  
+##### Test 1
+- After the first test, we pruned KNN, DecisionTree, and LDA.  These models all had a majority of scores lower than 75% and very wide ranges
+![Vanilla1](figures/VanillaResults1.png)
+
+##### Test 2
+- After the second test, we then pruned ADA, Bagging, and Gaussian classifier due to their wide ranges and low accuracies
+![Vanilla2](figures/VanillaResults2.png)
+
+##### Test 3
+- Finally, we pruned only the Bagging Classifier, leaving us with LogisticRegression, MultinomialNB, LinearSVC, SDGSVC, RidgeClassifier, and RandomForestClassifier
+- Although the stacked classifier did not perform much better than other classifiers alone, the range was tighter and provided more consistent predictions
+![Vanilla3](figures/VanillaResults3.png)
+
+
+### Tuned Stacked Classifier 
+- For each model mentioned above, we tuned the hyperparameters than repeated the RepeatedStratifiedKFold 
+- Again, we see that the stacked classifier did not perform much better than the other classifiers alone, but there was evidence of a tighter range and thus more consistent predictions
+- The stacked classifier was chosen as the final model because Stacked Classifiers improve with variation.  Although we see in our example that it did not do much better, with the inclusion of more data that is unknown is might perform better than the latter.  
+![TunedStacked](figures/TunedResults.png)
+
+
+
+
 
 
 
