@@ -8,7 +8,7 @@
   - [LinkedIn](https://www.linkedin.com/in/samuel-mohebban-b50732139/) 
   - [Medium](https://medium.com/@HeeebsInc)
 - Raven Welch
-  - email 
+  - RavenNHWelch@gmail.com 
   - [LinkedIn](https://www.linkedin.com/in/raven-welch/)
   - [Medium]()
 
@@ -73,6 +73,7 @@
 ### Test 3
 - Finally, we pruned only the Bagging Classifier, leaving us with LogisticRegression, MultinomialNB, LinearSVC, SDGSVC, RidgeClassifier, and RandomForestClassifier
 - Although the stacked classifier did not perform much better than other classifiers alone, the range was tighter and provided more consistent predictions
+
 ![Vanilla3](figures/VanillaResults3.png)
 
 
