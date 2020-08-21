@@ -30,6 +30,7 @@
 - Data was pruned to 600 Positive Tweets and 570 Negative Tweets so that our final dataset had an equal class balance for each target
 
 ![ClassImbalance](figures/ClassImbalance.png)
+![WordSentimentFreq](figures/WordFreqSentiment.png)
 
 
 ## Data Cleaning 
