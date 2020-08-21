@@ -1,12 +1,14 @@
 # Google_Apple_Sentiment_Analysis
 
 ## Contributers 
-- [Samuel Mohebban]()
-  - email
-  - [linkedin] 
-- [Raven Welch]()
+- Samuel Mohebban
+  - Samuel.MohebbanJob@gmail.com
+  - [LinkedIn](https://www.linkedin.com/in/samuel-mohebban-b50732139/) 
+  - [Medium](https://medium.com/@HeeebsInc)
+- Raven Welch
   - email 
-  - [inkedin]
+  - [LinkedIn](https://www.linkedin.com/in/raven-welch/)
+  - [Medium]()
 
 [Google Slide Presentation](https://docs.google.com/presentation/d/15voSS3ctPLzh_cXnql9N3kaXL4PJ-3-6xRGRzFsgyzc/edit?usp=sharing)
 ### Problem 
@@ -26,7 +28,6 @@
 - Data was pruned to 600 Positive Tweets and 570 Negative Tweets so that our final dataset had an equal class balance for each target
 
 ![ClassImbalance](figures/ClassImbalance.png)
-
 
 ### Data Cleaning 
 1. Cleaned the data to remove the following: 
